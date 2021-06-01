@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:works_mobile/views/task/TaskListView.dart';
 
 class StatsCard extends StatefulWidget {
   const StatsCard({
@@ -8,11 +9,13 @@ class StatsCard extends StatefulWidget {
     required this.title,
     required this.description,
     required this.icon,
+    required this.link,
   }) : super(key: key);
 
   final String title;
   final String description;
   final IconData icon;
+  final String link;
 
   @override
   State<StatsCard> createState() => _StatsCardState();
@@ -39,14 +42,23 @@ class _StatsCardState extends State<StatsCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                // TextButton(
+                //   child: const Text('BUY TICKETS'),
+                //   onPressed: () {/* ... */},
+                // ),
+                // const SizedBox(width: 8),
                 TextButton(
-                  child: const Text('BUY TICKETS'),
-                  onPressed: () {/* ... */},
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  child: const Text('LISTEN'),
-                  onPressed: () {/* ... */},
+                  child: const Text('VIEW'),
+                  onPressed: () {
+                    if (widget.link != "") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TaskListView(widget.link)
+                          )
+                      );
+                    }
+                  },
                 ),
                 const SizedBox(width: 8),
               ],

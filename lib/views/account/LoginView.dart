@@ -40,7 +40,7 @@ class LoginView extends StatelessWidget {
                 var password = _passwordController.text;
                 var jwt = await attemptLogIn(username, password);
                 if(jwt != null) {
-                  storage.write(key: "access_token", value: jwt);
+                  storage.write(key: Constants.ACCESS_TOKEN, value: jwt);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -71,7 +71,7 @@ class LoginView extends StatelessWidget {
 
   Future<String?> attemptLogIn(String username, String password) async {
     var res = await http.post(
-        Uri.parse("${Constants.HOST_API}/api/token-auth/"),
+        Uri.parse(Constants.API_LOGIN),
         body: {
           "username": username,
           "password": password

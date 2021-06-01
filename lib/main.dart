@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/views/account/LoginView.dart';
 import 'package:works_mobile/views/home/StatsListView.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   Future<String> get jwtOrEmpty async {
-    var jwt = await storage.read(key: "access_token");
+    var jwt = await storage.read(key: Constants.ACCESS_TOKEN);
     if(jwt == null) return "";
     return jwt;
   }
