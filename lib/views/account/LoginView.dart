@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/views/home/StatsListView.dart';
@@ -12,6 +14,10 @@ final storage = FlutterSecureStorage();
 class LoginView extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  static final googleLogin = GoogleSignIn(scopes: [
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -82,5 +88,24 @@ class LoginView extends StatelessWidget {
       return jwt["token"];
     };
     return null;
+  }
+
+  // Googleを使ってサインイン
+  Future<void> signInWithGoogle() async {
+    // 認証フローのトリガー
+    final googleUser = await GoogleSignIn(scopes: [
+      'email',
+    ]).signIn();
+    // リクエストから、認証情報を取得
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // クレデンシャルを新しく作成
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      // サインインしたら、UserCredentialを返す
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    }
   }
 }

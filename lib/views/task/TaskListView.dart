@@ -47,7 +47,7 @@ class _TaskListState extends State<TaskListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("申請中タスク一覧"),
+        title: Text(this.getTitle()),
       ),
       body: Center(
         child: FutureBuilder(
@@ -75,6 +75,18 @@ class _TaskListState extends State<TaskListView> {
         ),
       ),
     );
+  }
+
+  String getTitle() {
+    if (widget.endpoint == Constants.API_TASK_APPROVAL) {
+      return "承認待ち一覧";
+    } else if (widget.endpoint == Constants.API_TASK_FINISHED) {
+      return "申請済一覧";
+    } else if (widget.endpoint == Constants.API_TASK_UNRESOLVED) {
+      return "申請中タスク一覧";
+    } else {
+      return "";
+    }
   }
 
 }
