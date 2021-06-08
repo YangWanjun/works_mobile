@@ -65,8 +65,10 @@ class LoginView extends StatelessWidget {
                           labelText: 'パスワード'
                       ),
                     ),
+                    SizedBox(
+                      height: 24,
+                    ),
                     Container(
-                      padding: EdgeInsets.all(24),
                       width: double.infinity,
                       child: ElevatedButton(
                         child: Text('ログイン'),

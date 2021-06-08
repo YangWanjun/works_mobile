@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
-import 'package:works_mobile/views/account/UserInfoView.dart';
+import 'package:works_mobile/views/home/StatsListView.dart';
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
@@ -21,8 +21,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoView(
-            user: user,
+          builder: (context) => StatsListView(
           ),
         ),
       );

@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foldable_sidebar/foldable_sidebar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:works_mobile/entities/TaskStatistics.dart';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
-import 'package:works_mobile/views/account/LoginView.dart';
+import 'package:works_mobile/widgets/Sidebar.dart';
 import 'package:works_mobile/widgets/StatsCard.dart';
+import 'package:works_mobile/widgets/TopBar.dart';
 
 class StatsListView extends StatefulWidget {
   StatsListView();
@@ -18,6 +20,7 @@ class StatsListView extends StatefulWidget {
 
 class _StatsListState extends State<StatsListView> {
   late Future<TaskStatistics> futureTaskStatistics;
+  FSBStatus _fsbStatus = FSBStatus.FSB_CLOSE;
 
   @override
   void initState() {
@@ -25,25 +28,54 @@ class _StatsListState extends State<StatsListView> {
     futureTaskStatistics = fetchTaskStatistics();
   }
 
+  toggleOpen () {
+    setState(() {
+      _fsbStatus = _fsbStatus == FSBStatus.FSB_OPEN ?
+      FSBStatus.FSB_CLOSE : FSBStatus.FSB_OPEN;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('ホーム'),
-        actions: <Widget>[IconButton(
-          icon: Icon(Icons.logout),
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => LoginView()
-                )
-            );
-          }, // The icon of your choice
-        ),],
+    return SafeArea(
+      child: Scaffold(
+        appBar: TopBar(
+          text: 'ホーム',
+          callback: this.toggleOpen,
+        ),
+        body: FoldableSidebarBuilder(
+          drawerBackgroundColor: Colors.cyan[100],
+          drawer: Sidebar(
+            drawerClose: () => {
+              setState(() {
+                _fsbStatus = FSBStatus.FSB_CLOSE;
+              })
+            },
+          ),
+          screenContents: StatsList(),
+          status: _fsbStatus,
+        )
       ),
-      body: Center(
-        child: FutureBuilder(
+    );
+  }
+
+  Future<TaskStatistics> fetchTaskStatistics() async {
+    final response = await Ajax.get(Constants.API_TASK_STATS);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return TaskStatistics.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load TaskStatistics');
+    }
+  }
+
+  Widget StatsList() {
+    return Center(
+      child: FutureBuilder(
           future: this.futureTaskStatistics,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -82,23 +114,7 @@ class _StatsListState extends State<StatsListView> {
               return CircularProgressIndicator();
             }
           }
-        ),
-      )
+      ),
     );
   }
-
-  Future<TaskStatistics> fetchTaskStatistics() async {
-    final response = await Ajax.get(Constants.API_TASK_STATS);
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return TaskStatistics.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load TaskStatistics');
-    }
-  }
-
 }
