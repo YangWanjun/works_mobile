@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:works_mobile/entities/TaskStatistics.dart';
+import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
+import 'package:works_mobile/views/account/LoginView.dart';
 import 'package:works_mobile/widgets/StatsCard.dart';
 
 class StatsListView extends StatefulWidget {
-  StatsListView(this.jwt);
-
-  final String jwt;
+  StatsListView();
 
   @override
   State<StatsListView> createState() => _StatsListState();
@@ -23,7 +22,7 @@ class _StatsListState extends State<StatsListView> {
   @override
   void initState() {
     super.initState();
-    futureTaskStatistics = fetchTaskStatistics(widget.jwt);
+    futureTaskStatistics = fetchTaskStatistics();
   }
 
   @override
@@ -31,6 +30,17 @@ class _StatsListState extends State<StatsListView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('ホーム'),
+        actions: <Widget>[IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LoginView()
+                )
+            );
+          }, // The icon of your choice
+        ),],
       ),
       body: Center(
         child: FutureBuilder(
@@ -77,8 +87,8 @@ class _StatsListState extends State<StatsListView> {
     );
   }
 
-  Future<TaskStatistics> fetchTaskStatistics(String jwt) async {
-    final response = await http.get(Uri.parse(Constants.API_TASK_STATS), headers: {"Authorization": "JWT ${jwt}"});
+  Future<TaskStatistics> fetchTaskStatistics() async {
+    final response = await Ajax.get(Constants.API_TASK_STATS);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,

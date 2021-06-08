@@ -1,66 +1,99 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:works_mobile/utils/authentication.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
+import 'package:works_mobile/utils/CustomColors.dart';
 import 'package:works_mobile/views/home/StatsListView.dart';
+import 'package:works_mobile/widgets/GoogleSignInButton.dart';
 
 final storage = FlutterSecureStorage();
 
 class LoginView extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  static final googleLogin = GoogleSignIn(scopes: [
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ]);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('ログイン'),),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'ユーザー名'
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(24),
+                child: FutureBuilder(
+                  future: Authentication.initializeFirebase(context: context),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error initializing Firebase');
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      return GoogleSignInButton();
+                    }
+                    return CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        CustomColors.firebaseOrange,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'パスワード'
+              const Divider(
+                height: 10,
+                thickness: 2,
               ),
-            ),
-            TextButton(
-              onPressed: () async {
-                var username = _usernameController.text;
-                var password = _passwordController.text;
-                var jwt = await attemptLogIn(username, password);
-                if(jwt != null) {
-                  storage.write(key: Constants.ACCESS_TOKEN, value: jwt);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StatsListView(jwt)
-                      )
-                  );
-                } else {
-                  displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
-                }
-              },
-              child: Text('ログイン'),
-            )
-          ],
-        ),
+              Container(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                          labelText: 'ユーザー名'
+                      ),
+                    ),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          labelText: 'パスワード'
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(24),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        child: Text('ログイン'),
+                        onPressed: () async {
+                          var username = _usernameController.text;
+                          var password = _passwordController.text;
+                          var jwt = await attemptLogIn(username, password);
+                          if(jwt != null) {
+                            storage.write(key: Constants.ACCESS_TOKEN, value: jwt);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StatsListView()
+                                )
+                            );
+                          } else {
+                            displayDialog(context, "An Error Occurred", "No account was found matching that username and password");
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        )
       ),
     );
   }
@@ -88,24 +121,5 @@ class LoginView extends StatelessWidget {
       return jwt["token"];
     };
     return null;
-  }
-
-  // Googleを使ってサインイン
-  Future<void> signInWithGoogle() async {
-    // 認証フローのトリガー
-    final googleUser = await GoogleSignIn(scopes: [
-      'email',
-    ]).signIn();
-    // リクエストから、認証情報を取得
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      // クレデンシャルを新しく作成
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      // サインインしたら、UserCredentialを返す
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    }
   }
 }

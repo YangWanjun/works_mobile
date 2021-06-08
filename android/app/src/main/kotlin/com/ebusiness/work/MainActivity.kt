@@ -1,4 +1,4 @@
-package com.example.works_mobile
+package com.ebusiness.work
 
 import io.flutter.embedding.android.FlutterActivity
 

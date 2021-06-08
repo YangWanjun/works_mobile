@@ -42,9 +42,9 @@ class MyApp extends StatelessWidget {
           if (!snapshot.hasData) {
             return LoginView();
           } else if (snapshot.data != "") {
-            var str = snapshot.data;
-            if (str != null) {
-              return StatsListView(str.toString());
+            var jwt = snapshot.data;
+            if (jwt != null) {
+              return StatsListView();
             } else {
               return LoginView();
             }

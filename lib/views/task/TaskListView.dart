@@ -2,13 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:works_mobile/entities/ListTask.dart';
+import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/widgets/TaskCard.dart';
-
-var storage = FlutterSecureStorage();
 
 class TaskListView extends StatefulWidget {
   TaskListView(this.endpoint);
@@ -29,8 +26,7 @@ class _TaskListState extends State<TaskListView> {
   }
 
   Future<List<ListTask>> fetchTasks() async {
-    final jwt = await storage.read(key: Constants.ACCESS_TOKEN);
-    final response = await http.get(Uri.parse(widget.endpoint), headers: {"Authorization": "JWT ${jwt}"});
+    final response = await Ajax.get(widget.endpoint);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
