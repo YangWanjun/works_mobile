@@ -26,17 +26,8 @@ class _TaskListState extends State<TaskListView> {
   }
 
   Future<List<ListTask>> fetchTasks() async {
-    final response = await Ajax.get(widget.endpoint);
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return ListTask.fromJsonList(json.decode(utf8.decode(response.bodyBytes)));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load UnresolvedTask');
-    }
+    final data = await Ajax.get(widget.endpoint);
+    return ListTask.fromJsonList(json.decode(data));
   }
 
   @override

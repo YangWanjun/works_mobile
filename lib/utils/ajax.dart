@@ -11,9 +11,17 @@ class Ajax {
     return http.get(Uri.parse(url));
   }
 
-  static Future<http.Response> get(String url) {
+  static Future<String> get(String url) {
     return getJwt()
-      .then((jwt) => http.get(Uri.parse(url), headers: {"Authorization": "JWT ${jwt}"}));
+      .then((jwt) => http.get(Uri.parse(url), headers: {"Authorization": "JWT ${jwt}"}))
+      .then((response) {
+        if (response.statusCode >= 200 && response.statusCode < 400) {
+          // JSONの文字列を返す
+          return utf8.decode(response.bodyBytes);
+        } else {
+          throw Exception('Failed to call api');
+        }
+      });
   }
 
   static Future<String> post(String url, Object? body) {
@@ -24,7 +32,7 @@ class Ajax {
           // JSONの文字列を返す
           return utf8.decode(response.bodyBytes);
         } else {
-          throw Exception('Failed to load UnresolvedTask');
+          throw Exception('Failed to call api');
         }
       });
   }

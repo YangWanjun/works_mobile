@@ -60,17 +60,9 @@ class _StatsListState extends State<StatsListView> {
   }
 
   Future<TaskStatistics> fetchTaskStatistics() async {
-    final response = await Ajax.get(Constants.API_TASK_STATS);
+    final data = await Ajax.get(Constants.API_TASK_STATS);
 
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return TaskStatistics.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load TaskStatistics');
-    }
+    return TaskStatistics.fromJson(jsonDecode(data));
   }
 
   Widget StatsList() {
@@ -86,7 +78,7 @@ class _StatsListState extends State<StatsListView> {
                     title: '申請タスク数:${data.totalCount}',
                     description: 'いままで申請したタスク数',
                     icon: FontAwesomeIcons.handPointer,
-                    link: '',
+                    link: null,
                   ),
                   StatsCard(
                     title: '処理中タスク数:${data.unresolvedCount}',

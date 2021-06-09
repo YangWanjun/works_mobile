@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/views/home/StatsListView.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
+import 'package:works_mobile/views/task/WorkflowListView.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -40,6 +41,7 @@ class _SidebarState extends State<Sidebar> {
               imageUrl: userProfile.avatar,
               placeholder: (context, url) => CircularProgressIndicator(),
               errorWidget: (context, url, error) => Icon(Icons.person, size: 60,),
+              width: 100,
             ));
           } else {
             avatar1 = CircleAvatar(
@@ -82,7 +84,12 @@ class _SidebarState extends State<Sidebar> {
               ),
               ListTile(
                 onTap: () {
-                  debugPrint("Tapped settings");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WorkflowListView()
+                      )
+                  );
                 },
                 leading: Icon(Icons.article),
                 title: Text("各種手続き"),

@@ -15,7 +15,7 @@ class StatsCard extends StatefulWidget {
   final String title;
   final String description;
   final IconData icon;
-  final String link;
+  final String? link;
 
   @override
   State<StatsCard> createState() => _StatsCardState();
@@ -42,23 +42,22 @@ class _StatsCardState extends State<StatsCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                // TextButton(
-                //   child: const Text('BUY TICKETS'),
-                //   onPressed: () {/* ... */},
-                // ),
-                // const SizedBox(width: 8),
-                TextButton(
-                  child: const Text('VIEW'),
-                  onPressed: () {
-                    if (widget.link != "") {
-                      Navigator.push(
+                widget.link == null ? (
+                  const SizedBox(height: 32)
+                ) : (
+                  TextButton(
+                    child: const Text('VIEW'),
+                    onPressed: () {
+                      if (widget.link != null) {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TaskListView(widget.link)
+                              builder: (context) => TaskListView(widget.link.toString())
                           )
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  )
                 ),
                 const SizedBox(width: 8),
               ],
