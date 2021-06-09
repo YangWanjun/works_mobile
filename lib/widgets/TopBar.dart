@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:works_mobile/utils/authentication.dart';
 import 'package:works_mobile/views/account/LoginView.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
@@ -18,6 +19,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[IconButton(
         icon: Icon(Icons.logout),
         onPressed: () {
+          Authentication.signOut(context: context);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(

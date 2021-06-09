@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:works_mobile/api/account.dart';
 import 'package:works_mobile/utils/authentication.dart';
 import 'package:works_mobile/views/home/StatsListView.dart';
 
@@ -35,6 +36,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
           });
 
           User? user = await Authentication.signInWithGoogle(context: context);
+          Account.getMe();
 
           setState(() {
             _isSigningIn = false;

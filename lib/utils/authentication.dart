@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/views/home/StatsListView.dart';
@@ -51,7 +52,7 @@ class Authentication {
       try {
         final UserCredential userCredential = await auth.signInWithCredential(credential);
         user = userCredential.user;
-        final response = await Ajax.get('${Constants.API_GOOGLE_LOGIN}?access_token=${googleSignInAuthentication.accessToken}');
+        final response = await Ajax.getWithoutAuth('${Constants.API_GOOGLE_LOGIN}?access_token=${googleSignInAuthentication.accessToken}');
         if (response.statusCode == 200) {
           Map<String, dynamic> jwt = json.decode(response.body);
           await storage.write(key: Constants.ACCESS_TOKEN, value: jwt["token"]);
@@ -98,6 +99,12 @@ class Authentication {
   }
 
   static Future<void> signOut({required BuildContext context}) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    // Delete all
+    await storage.deleteAll();
+    if (user == null) {
+      return;
+    }
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
