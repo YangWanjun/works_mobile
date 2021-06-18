@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
 
-const String API_WORKFLOW_LIST = "${Constants.HOST_API}/api/workflow/workflows/";
+const String API_WORKFLOW_LIST = "${Constants.HOST_API}/api/task/workflows/";
 
 class Workflow {
   final String code;

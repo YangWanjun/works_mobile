@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "48791817032",
+    "project_id": "eb-work",
+    "storage_bucket": "eb-work.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48791817032:android:1ae65bbb173da923c8817d",
+        "android_client_info": {
+          "package_name": "com.ebusiness.work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48791817032-cchv30mfspilvu171kqddgpcs28ukdk5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ebusiness.work",
+            "certificate_hash": "e8bc9284a68526b9d2d93a77655e2ce43a599642"
+          }
+        },
+        {
+          "client_id": "48791817032-cn8jvhu3iiji006ljuf3vpmc41bh93er.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcJLYlk2elbayrENC6mAqp2f140Aqt74I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48791817032-cn8jvhu3iiji006ljuf3vpmc41bh93er.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

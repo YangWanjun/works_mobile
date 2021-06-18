@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:works_mobile/entities/Workflow.dart';
 
+import 'TaskCreateView.dart';
+
 class WorkflowListView extends StatefulWidget {
 
   @override
@@ -60,6 +62,14 @@ class _WorkflowListState extends State<WorkflowListView> {
                                   label: const Text('新規作成'),
                                   icon: Icon(Icons.add_circle_outline),
                                   onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => TaskCreateView(
+                                              workflow: data[index],
+                                            )
+                                        )
+                                    );
                                   },
                                 )
                               ],
