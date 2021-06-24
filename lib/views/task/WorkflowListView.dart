@@ -99,6 +99,12 @@ class _WorkflowListState extends State<WorkflowListView> {
 
   IconData getWorkflowIcon(String code) {
     switch (code) {
+      case '01':  // 証明書発行
+        return FontAwesomeIcons.fileAlt;
+      case '02':  // 証明書発行(保育園用)
+        return FontAwesomeIcons.babyCarriage;
+      case '03':  // ビザ変更
+        return FontAwesomeIcons.idCard;
       case '10':  // 通勤変更
         return FontAwesomeIcons.subway;
       case '11':  // 経費精算

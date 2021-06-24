@@ -4,6 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:works_mobile/utils/constants.dart' as Constants;
 
+import 'NavigationService.dart';
+import 'locator.dart';
+
 const storage = FlutterSecureStorage();
 
 class Ajax {
@@ -42,6 +45,8 @@ class Ajax {
       if (jwt != null) {
         return jwt;
       } else {
+        final NavigationService _navigationService = locator<NavigationService>();
+        _navigationService.pushNamed('/login');
         return new Future.error({"error": true});
       }
     });

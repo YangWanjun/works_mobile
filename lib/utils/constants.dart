@@ -1,4 +1,4 @@
-const String HOST_API = "http://oa.sales.e-business.co.jp";
+const String HOST_API = "https://api.oa.e-business.co.jp";
 const String API_LOGIN = "${HOST_API}/api/token-auth/";
 const String API_TASK_STATS = "${HOST_API}/api/account/task/statistics/";
 const String API_TASK_UNRESOLVED = "${HOST_API}/api/task/tasks/unresolved/";

@@ -4,9 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:works_mobile/entities/UserProfile.dart';
-import 'package:works_mobile/views/home/StatsListView.dart';
+import 'package:works_mobile/utils/NavigationService.dart';
+import 'package:works_mobile/utils/locator.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
-import 'package:works_mobile/views/task/WorkflowListView.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -49,6 +49,7 @@ class _SidebarState extends State<Sidebar> {
               backgroundImage: AssetImage('assets/avatar.png'),
             );
           }
+          final NavigationService _navigationService = locator<NavigationService>();
           return Column(
             children: <Widget>[
               Container(
@@ -68,12 +69,7 @@ class _SidebarState extends State<Sidebar> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StatsListView()
-                      )
-                  );
+                  _navigationService.pushNamed('/home');
                 },
                 leading: Icon(Icons.home),
                 title: Text("ホーム"),
@@ -84,12 +80,7 @@ class _SidebarState extends State<Sidebar> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => WorkflowListView()
-                      )
-                  );
+                  _navigationService.pushNamed('/task/workflows');
                 },
                 leading: Icon(Icons.article),
                 title: Text("各種手続き"),

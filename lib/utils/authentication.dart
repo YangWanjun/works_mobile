@@ -6,20 +6,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/views/home/StatsListView.dart';
+
+import 'common.dart' as common;
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
     required BuildContext context,
   }) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
+    var jwt = await common.jwtOrEmpty;
 
     User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
+    if (user != null && jwt != '') {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => StatsListView(
