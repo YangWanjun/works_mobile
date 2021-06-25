@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/utils/NavigationService.dart';
 import 'package:works_mobile/utils/locator.dart';
-import 'package:works_mobile/utils/constants.dart' as Constants;
+import 'package:works_mobile/utils/common.dart' as common;
 
 const storage = FlutterSecureStorage();
 
@@ -28,7 +28,7 @@ class _SidebarState extends State<Sidebar> {
       width: mediaQuery.size.width * 0.60,
       height: mediaQuery.size.height,
       child: FutureBuilder(
-        future: storage.read(key: Constants.KEY_USER),
+        future: common.getMe(),
         builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           String email = '';
           late CircleAvatar avatar1;

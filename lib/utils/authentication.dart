@@ -57,14 +57,14 @@ class Authentication {
         final response = await Ajax.getWithoutAuth('${Constants.API_GOOGLE_LOGIN}?access_token=${googleSignInAuthentication.accessToken}');
         if (response.statusCode == 200) {
           Map<String, dynamic> jwt = json.decode(response.body);
-          await storage.write(key: Constants.ACCESS_TOKEN, value: jwt["token"]);
+          await common.setJwt(jwt["token"]);
         } else {
           throw Exception('Failed to login EB Work');
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            common.errorSnackBar(
               content:
               'The account already exists with a different credential.',
             ),
@@ -72,7 +72,7 @@ class Authentication {
         }
         else if (e.code == 'invalid-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            common.errorSnackBar(
               content:
               'Error occurred while accessing credentials. Try again.',
             ),
@@ -80,7 +80,7 @@ class Authentication {
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          Authentication.customSnackBar(
+          common.errorSnackBar(
             content: 'Error occurred using Google Sign-In. Try again.',
           ),
         );
@@ -90,20 +90,10 @@ class Authentication {
     return user;
   }
 
-  static SnackBar customSnackBar({required String content}) {
-    return SnackBar(
-      backgroundColor: Colors.black,
-      content: Text(
-        content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
-      ),
-    );
-  }
-
   static Future<void> signOut({required BuildContext context}) async {
     User? user = FirebaseAuth.instance.currentUser;
     // Delete all
-    await storage.deleteAll();
+    await common.clearStorage();
     if (user == null) {
       return;
     }
@@ -117,7 +107,7 @@ class Authentication {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        Authentication.customSnackBar(
+        common.errorSnackBar(
           content: 'Error signing out. Try again.',
         ),
       );

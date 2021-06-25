@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:works_mobile/api/account.dart';
 import 'package:works_mobile/utils/authentication.dart';
+import 'package:works_mobile/utils/common.dart' as common;
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/utils/CustomColors.dart';
 import 'package:works_mobile/views/home/StatsListView.dart';
@@ -78,7 +79,6 @@ class LoginView extends StatelessWidget {
                           var password = _passwordController.text;
                           var jwt = await attemptLogIn(username, password);
                           if(jwt != null) {
-                            storage.write(key: Constants.ACCESS_TOKEN, value: jwt);
                             Account.getMe();
                             Navigator.push(
                                 context,
@@ -122,6 +122,7 @@ class LoginView extends StatelessWidget {
     );
     if(res.statusCode == 200) {
       Map<String, dynamic> jwt = json.decode(res.body);
+      common.setJwt(jwt["token"]);
       return jwt["token"];
     };
     return null;

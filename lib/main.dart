@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:works_mobile/utils/NavigationService.dart';
 import 'package:works_mobile/utils/common.dart';
 import 'package:works_mobile/utils/locator.dart';
@@ -55,6 +56,10 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
     );
   }
 }
