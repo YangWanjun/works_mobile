@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
@@ -77,4 +79,13 @@ Color getToastStyle(Toast toast) {
 
 String getFileExtension(String path) {
   return p.extension(path);
+}
+
+String getChoiceText(String value, List choice) {
+  var item = choice.firstWhere((element) => element['value'] == value);
+  if (item != null) {
+    return item['text'];
+  } else {
+    return "";
+  }
 }

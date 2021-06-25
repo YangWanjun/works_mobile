@@ -11,30 +11,15 @@ import 'package:works_mobile/utils/common.dart' as common;
 
 
 class TaskTraffic extends StatefulWidget {
-  const TaskTraffic({Key? key, required this.workflow, required this.data})
+  const TaskTraffic({Key? key, required this.formKey, required this.workflow, required this.data})
       : super(key: key);
 
   final Workflow workflow;
   final Map<String, dynamic> data;
+  final formKey;
 
   @override
   State<TaskTraffic> createState() => _TaskTrafficState();
-
-  static bool checkInput(Map<String, dynamic> data) {
-    if (data['start_date'] == null) {
-      return false;
-    }
-    if (data["home_station"] == null || data["home_station"] == '') {
-      return false;
-    }
-    if (data["work_station"] == null || data["work_station"] == '') {
-      return false;
-    }
-    if (data["amount"] == null || data["amount"] == '') {
-      return false;
-    }
-    return true;
-  }
 
 }
 
@@ -49,96 +34,103 @@ class _TaskTrafficState extends State<TaskTraffic> {
 
     return Container(
       padding: EdgeInsets.all(16),
-      child: Column(
-        children: <Widget>[
-          TextField(
-            focusNode: AlwaysDisabledFocusNode(),
-            controller: _textEditingController,
-            decoration: const InputDecoration(
-              labelText: "通勤開始日",
-              suffixIcon: Icon(Icons.calendar_today),
-            ),
-            onTap: () {
-              _selectDate(context, 'start_date');
-            },
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.always,
-            maxLength: 15,
-            decoration: const InputDecoration(
-                labelText: "自宅駅 （*）"
-            ),
-            validator: (String? value) {
-              return value == null || value.isEmpty ? 'この項目は必須です' : null;
-            },
-            onChanged: (String? value) {
-              data["home_station"] = value;
-            },
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.always,
-            maxLength: 15,
-            decoration: const InputDecoration(
-                labelText: "勤務地駅 （*）"
-            ),
-            validator: (String? value) {
-              return value == null || value.isEmpty ? 'この項目は必須です' : null;
-            },
-            onChanged: (String? value) {
-              data["work_station"] = value;
-            },
-          ),
-          TextFormField(
-            maxLength: 100,
-            decoration: const InputDecoration(
-                labelText: "自宅住所"
-            ),
-            onChanged: (String? value) {
-              data["home_address"] = value;
-            },
-          ),
-          TextFormField(
-            maxLength: 100,
-            decoration: const InputDecoration(
-                labelText: "勤務地住所"
-            ),
-            onChanged: (String? value) {
-              data["work_address"] = value;
-            },
-          ),
-          TextFormField(
-            autovalidateMode: AutovalidateMode.always,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            decoration: const InputDecoration(
-                labelText: "金額 （*）"
-            ),
-            validator: (String? value) {
-              return value == null || value.isEmpty ? 'この項目は必須です' : null;
-            },
-            keyboardType: TextInputType.number,
-            onChanged: (String? value) {
-              data["amount"] = value;
-            },
-          ),
-          Row(
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  this._showPicker(context);
-                },
-                child: Text("定期券の写し"),
+      child: Form(
+        key: widget.formKey,
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              focusNode: AlwaysDisabledFocusNode(),
+              controller: _textEditingController,
+              decoration: const InputDecoration(
+                labelText: "通勤開始日 （*）",
+                suffixIcon: Icon(Icons.calendar_today),
               ),
-              SizedBox(
-                width: 10,
+              validator: (String? value) {
+                return value == null || value.isEmpty ? 'この項目は必須です' : null;
+              },
+              onTap: () {
+                _selectDate(context, 'start_date');
+              },
+            ),
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              maxLength: 15,
+              decoration: const InputDecoration(
+                  labelText: "自宅駅 （*）"
               ),
-              _image == null
-                  ? Text('No image selected.')
-                  : Image.file(_image!, width: 200, height: 100,)
-            ],
-          ),
-        ],
+              validator: (String? value) {
+                return value == null || value.isEmpty ? 'この項目は必須です' : null;
+              },
+              onChanged: (String? value) {
+                data["home_station"] = value;
+              },
+            ),
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              maxLength: 15,
+              decoration: const InputDecoration(
+                  labelText: "勤務地駅 （*）"
+              ),
+              validator: (String? value) {
+                return value == null || value.isEmpty ? 'この項目は必須です' : null;
+              },
+              onChanged: (String? value) {
+                data["work_station"] = value;
+              },
+            ),
+            TextFormField(
+              maxLength: 100,
+              decoration: const InputDecoration(
+                  labelText: "自宅住所"
+              ),
+              onChanged: (String? value) {
+                data["home_address"] = value;
+              },
+            ),
+            TextFormField(
+              maxLength: 100,
+              decoration: const InputDecoration(
+                  labelText: "勤務地住所"
+              ),
+              onChanged: (String? value) {
+                data["work_address"] = value;
+              },
+            ),
+            TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              decoration: const InputDecoration(
+                  labelText: "金額 （*）"
+              ),
+              validator: (String? value) {
+                return value == null || value.isEmpty ? 'この項目は必須です' : null;
+              },
+              keyboardType: TextInputType.number,
+              onChanged: (String? value) {
+                data["amount"] = value;
+              },
+            ),
+            Row(
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    this._showPicker(context);
+                  },
+                  child: Text("定期券の写し"),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                _image == null
+                    ? Text('No image selected.')
+                    : Image.file(_image!, width: 200, height: 100,)
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

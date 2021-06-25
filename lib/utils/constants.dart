@@ -10,3 +10,15 @@ const String API_GOOGLE_LOGIN = "${HOST_API}/google-login/";
 
 const String ACCESS_TOKEN = "access_token";
 const String KEY_USER = "user";
+
+const List CHOICE_RESIDENCE_TYPE = [
+  {"value": "01", "text": "特定活動"},
+  {"value": "02", "text": "企業内転勤"},
+  {"value": "03", "text": "技術・人文知識・国際業務"},
+  {"value": "10", "text": "高度専門職1号"},
+  {"value": "11", "text": "高度専門職2号"},
+  {"value": "20", "text": "永住者"},
+  {"value": "21", "text": "永住者の配偶者"},
+  {"value": "22", "text": "日本人の配偶者"},
+  {"value": "90", "text": "日本籍"},
+];

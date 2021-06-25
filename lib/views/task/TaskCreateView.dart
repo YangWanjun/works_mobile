@@ -25,6 +25,7 @@ class TaskCreateView extends StatefulWidget {
 class _TaskCreateState extends State<TaskCreateView> {
   Map<String, dynamic> data = new Map<String, dynamic>();
   bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -76,24 +77,49 @@ class _TaskCreateState extends State<TaskCreateView> {
   Widget _createWorkflowForm(int employee) {
     switch (this.widget.workflow.code) {
       case '01':  // 証明書発行
-        return TaskTraffic(workflow: this.widget.workflow, data: data,);
+        return TaskTraffic(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+        );
       case '02':  // 証明書発行(保育園用)
-        return TaskTraffic(workflow: this.widget.workflow, data: data,);
+        return TaskTraffic(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+        );
       case '03':  // ビザ変更
-        return TaskVisa(workflow: this.widget.workflow, data: data, employee: employee,);
+        return TaskVisa(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+          employee: employee,
+        );
       case '10':  // 通勤変更
-        return TaskTraffic(workflow: this.widget.workflow, data: data,);
+        return TaskTraffic(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+        );
       case '11':  // 経費精算
-        return TaskTraffic(workflow: this.widget.workflow, data: data,);
+        return TaskTraffic(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+        );
       default:
-        return TaskTraffic(workflow: this.widget.workflow, data: data,);
+        return TaskTraffic(
+          formKey: _formKey,
+          workflow: this.widget.workflow,
+          data: data,
+        );
     }
   }
 
   _onSubmit(int employee) async {
     String code = this.widget.workflow.code;
-    if (code == "10" && !TaskTraffic.checkInput(data)) {
-      return;
+    if (!_formKey.currentState!.validate()) {
+      return false;
     }
     setState(() {
       _isLoading = true;
