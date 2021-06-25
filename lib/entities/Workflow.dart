@@ -9,18 +9,21 @@ class Workflow {
   final String code;
   final String name;
   final bool is_active;
+  final String? comment;
 
   Workflow({
     required this.code,
     required this.name,
     required this.is_active,
+    this.comment,
   });
 
   factory Workflow.fromJson(Map<String, dynamic> data) {
     return Workflow(
-        code: data['code'],
-        name: data['name'],
-        is_active: data['is_active'],
+      code: data['code'],
+      name: data['name'],
+      is_active: data['is_active'],
+      comment: data['comment'],
     );
   }
 
