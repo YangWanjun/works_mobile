@@ -22,3 +22,10 @@ const List CHOICE_RESIDENCE_TYPE = [
   {"value": "22", "text": "日本人の配偶者"},
   {"value": "90", "text": "日本籍"},
 ];
+
+const List CHOICE_CERTIFICATE_TYPE = [
+  {"value": "01", "text": "在職証明書(日本語)"},
+  {"value": "02", "text": "在職証明書(英語)"},
+  {"value": "10", "text": "給与証明書(年)"},
+  {"value": "11", "text": "給与証明書(月)"},
+];

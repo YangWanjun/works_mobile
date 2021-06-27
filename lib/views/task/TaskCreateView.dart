@@ -7,6 +7,8 @@ import 'package:works_mobile/api/task.dart';
 import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/entities/Workflow.dart';
 import 'package:works_mobile/utils/common.dart' as common;
+import 'package:works_mobile/widgets/TaskCertificate.dart';
+import 'package:works_mobile/widgets/TaskCertificateBaby.dart';
 import 'package:works_mobile/widgets/TaskTraffic.dart';
 import 'package:works_mobile/widgets/TaskVisa.dart';
 
@@ -77,13 +79,13 @@ class _TaskCreateState extends State<TaskCreateView> {
   Widget _createWorkflowForm(int employee) {
     switch (this.widget.workflow.code) {
       case '01':  // 証明書発行
-        return TaskTraffic(
+        return TaskCertificate(
           formKey: _formKey,
           workflow: this.widget.workflow,
           data: data,
         );
       case '02':  // 証明書発行(保育園用)
-        return TaskTraffic(
+        return TaskCertificateBaby(
           formKey: _formKey,
           workflow: this.widget.workflow,
           data: data,

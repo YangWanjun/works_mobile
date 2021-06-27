@@ -104,6 +104,7 @@ class _TaskVisaState extends State<TaskVisa> {
                   validator: (String? value) {
                     return value == null || value.isEmpty ? 'この項目は必須です' : null;
                   },
+                  initialValue: data["publisher"],
                   onChanged: (String? value) {
                     data["publisher"] = value;
                   },
@@ -118,6 +119,7 @@ class _TaskVisaState extends State<TaskVisa> {
                   validator: (String? value) {
                     return value == null || value.isEmpty ? 'この項目は必須です' : null;
                   },
+                  initialValue: data["years"],
                   onChanged: (String? value) {
                     data["years"] = value;
                   },
@@ -149,6 +151,7 @@ class _TaskVisaState extends State<TaskVisa> {
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
+                  initialValue: data["comment"],
                   onChanged: (String? value) {
                     data["comment"] = value;
                   },

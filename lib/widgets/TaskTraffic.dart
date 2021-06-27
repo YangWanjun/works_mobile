@@ -31,6 +31,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> data = this.widget.data;
+    _textEditingController.text = data['start_date'];
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -62,6 +63,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
               validator: (String? value) {
                 return value == null || value.isEmpty ? 'この項目は必須です' : null;
               },
+              initialValue: data["home_station"],
               onChanged: (String? value) {
                 data["home_station"] = value;
               },
@@ -75,6 +77,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
               validator: (String? value) {
                 return value == null || value.isEmpty ? 'この項目は必須です' : null;
               },
+              initialValue: data["work_station"],
               onChanged: (String? value) {
                 data["work_station"] = value;
               },
@@ -84,6 +87,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
               decoration: const InputDecoration(
                   labelText: "自宅住所"
               ),
+              initialValue: data["home_address"],
               onChanged: (String? value) {
                 data["home_address"] = value;
               },
@@ -93,6 +97,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
               decoration: const InputDecoration(
                   labelText: "勤務地住所"
               ),
+              initialValue: data["work_address"],
               onChanged: (String? value) {
                 data["work_address"] = value;
               },
@@ -109,6 +114,7 @@ class _TaskTrafficState extends State<TaskTraffic> {
                 return value == null || value.isEmpty ? 'この項目は必須です' : null;
               },
               keyboardType: TextInputType.number,
+              initialValue: data["amount"],
               onChanged: (String? value) {
                 data["amount"] = value;
               },
