@@ -1,20 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:works_mobile/entities/Task.dart';
+import 'package:works_mobile/views/task/TaskDetail.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard({
     Key? key,
-    required this.name,
-    required this.dateTime,
-    required this.approver,
-    required this.status,
+    required this.task,
   }) : super(key: key);
 
-  final String name;
-  final DateTime dateTime;
-  final String approver;
-  final String status;
+  final Task task;
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -32,8 +28,16 @@ class _TaskCardState extends State<TaskCard> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              title: Text(widget.name),
-              trailing: Text(formatter.format(widget.dateTime.toLocal())),
+              title: Text(widget.task.name),
+              trailing: Text(formatter.format(widget.task.dateTime.toLocal())),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                children: <Widget>[
+                  Text("承認者:${widget.task.approver}")
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -46,6 +50,12 @@ class _TaskCardState extends State<TaskCard> {
                 TextButton(
                   child: const Text('VIEW'),
                   onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TaskDetail(task: widget.task)
+                        )
+                    );
                   },
                 ),
                 const SizedBox(width: 8),

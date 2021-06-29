@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:works_mobile/entities/ListTask.dart';
+import 'package:works_mobile/entities/Task.dart';
 import 'package:works_mobile/utils/ajax.dart';
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/widgets/TaskCard.dart';
@@ -17,7 +17,7 @@ class TaskListView extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskListView> {
-  late Future<List<ListTask>> futureTasks;
+  late Future<List<Task>> futureTasks;
 
   @override
   void initState() {
@@ -25,9 +25,13 @@ class _TaskListState extends State<TaskListView> {
     futureTasks = fetchTasks();
   }
 
-  Future<List<ListTask>> fetchTasks() async {
+  Future<List<Task>> fetchTasks() async {
     final data = await Ajax.get(widget.endpoint);
-    return ListTask.fromJsonList(json.decode(data));
+    if (widget.endpoint == Constants.API_TASK_APPROVAL) {
+      return Task.fromTaskNodeJsonList(json.decode(data));
+    } else {
+      return Task.fromJsonList(json.decode(data));
+    }
   }
 
   @override
@@ -41,15 +45,12 @@ class _TaskListState extends State<TaskListView> {
           future: this.futureTasks,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              List<ListTask> data = snapshot.data as List<ListTask>;
+              List<Task> data = snapshot.data as List<Task>;
               return ListView.builder(
                 itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
                   return TaskCard(
-                    name: data[index].name,
-                    dateTime: data[index].dateTime,
-                    approver: data[index].approver,
-                    status: data[index].status,
+                    task: data[index],
                   );
                 },
               );

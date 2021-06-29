@@ -20,6 +20,11 @@ class Ajax {
         if (response.statusCode >= 200 && response.statusCode < 400) {
           // JSONの文字列を返す
           return utf8.decode(response.bodyBytes);
+        } else if (response.statusCode == 401) {
+          final NavigationService _navigationService = locator<NavigationService>();
+          _navigationService.pushNamed('/login');
+          common.setJwt("");
+          return new Future.error({"error": true});
         } else {
           throw Exception('Failed to call api');
         }

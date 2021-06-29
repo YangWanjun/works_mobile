@@ -131,7 +131,7 @@ class _TaskCreateState extends State<TaskCreateView> {
     params['workflow'] = code;
     params['status'] = '10';
     params['fields'] = data;
-    Task.createTask(params).then((value) {
+    TaskApi.createTask(params).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
         common.successSnackBar(
           content: 'タスク：${this.widget.workflow.name}は申請しました。',
