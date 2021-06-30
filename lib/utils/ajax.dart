@@ -14,37 +14,45 @@ class Ajax {
   }
 
   static Future<String> get(String url) {
-    return getJwt()
-      .then((jwt) => http.get(Uri.parse(url), headers: {"Authorization": "JWT ${jwt}"}))
-      .then((response) {
-        if (response.statusCode >= 200 && response.statusCode < 400) {
-          // JSONの文字列を返す
-          return utf8.decode(response.bodyBytes);
-        } else if (response.statusCode == 401) {
-          final NavigationService _navigationService = locator<NavigationService>();
-          _navigationService.pushNamed('/login');
-          common.setJwt("");
-          return new Future.error({"error": true});
-        } else {
-          throw Exception('Failed to call api');
-        }
-      });
+    return _request('get', url, {});
   }
 
   static Future<String> post(String url, Map<String, dynamic> body) {
-    return getJwt()
-      .then((jwt) => http.post(Uri.parse(url), headers: {
+    return _request('post', url, body);
+  }
+
+  static Future<String> put(String url, Map<String, dynamic> body) {
+    return _request('put', url, body);
+  }
+
+  static Future<String> _request(String method, String url, Map<String, dynamic> body) {
+    return getJwt().then((jwt) {
+      var headers = {
         "Authorization": "JWT ${jwt}",
         "Content-Type": "application/json",
-      }, body: json.encode(body)))
-      .then((response) {
-        if (response.statusCode >= 200 && response.statusCode < 400) {
-          // JSONの文字列を返す
-          return utf8.decode(response.bodyBytes);
-        } else {
-          throw utf8.decode(response.bodyBytes);
-        }
-      });
+      };
+      if (method == 'get') {
+        return http.get(Uri.parse(url), headers: {"Authorization": "JWT ${jwt}"});
+      } else if (method == 'post') {
+        return http.post(Uri.parse(url), headers: headers, body: json.encode(body));
+      } else if (method == 'put') {
+        return http.put(Uri.parse(url), headers: headers, body: json.encode(body));
+      } else {
+        return new Future.error({"error": true});
+      }
+    }).then((response) {
+      if (response.statusCode >= 200 && response.statusCode < 400) {
+        // JSONの文字列を返す
+        return utf8.decode(response.bodyBytes);
+      } else if (response.statusCode == 401) {
+        final NavigationService _navigationService = locator<NavigationService>();
+        _navigationService.pushNamed('/login');
+        common.setJwt("");
+        return new Future.error({"error": true});
+      } else {
+        throw Exception('Failed to call api');
+      }
+    });
   }
 
   static Future<String> getJwt() {
@@ -58,4 +66,5 @@ class Ajax {
       }
     });
   }
+
 }

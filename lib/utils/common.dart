@@ -89,3 +89,57 @@ String getChoiceText(String value, List choice) {
     return "";
   }
 }
+
+void displayConfirm({
+  required BuildContext context,
+  required String content,
+  required Function callback,
+}) =>
+  displayDialog(
+    context: context,
+    title: "確認",
+    content: Text(content),
+    autoClose: true,
+    callback: callback,
+  );
+
+void displayDialog({
+  required BuildContext context,
+  required String title,
+  required Widget content,
+  required bool autoClose,
+  required Function callback,
+}) =>
+  showDialog(
+    context: context,
+    builder: (context) =>
+      AlertDialog(
+        title: Text(title),
+        content: content,
+        actions: <Widget>[
+          TextButton(
+            child: Text("取消"),
+            onPressed: () => Navigator.pop(context),
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(
+                Colors.redAccent,
+              ),
+            ),
+          ),
+          TextButton(
+            child: Text("確定"),
+            onPressed: () {
+              if (autoClose) {
+                Navigator.pop(context);
+              }
+              callback();
+            },
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(
+                Colors.indigo,
+              ),
+            ),
+          ),
+        ],
+      ),
+  );

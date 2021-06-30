@@ -29,3 +29,6 @@ const List CHOICE_CERTIFICATE_TYPE = [
   {"value": "10", "text": "給与証明書(年)"},
   {"value": "11", "text": "給与証明書(月)"},
 ];
+
+const String SUCCESS_SUBMITTED = '承認しました。';
+const String SUCCESS_UNDO_TASK = '差戻し成功しました。';

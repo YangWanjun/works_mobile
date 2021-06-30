@@ -15,4 +15,20 @@ class TaskApi {
     return Ajax.get('${Constants.HOST_API}/api/task/tasks/${taskId}/form/')
         .then((data) => TaskField.fromJsonList(json.decode(data)));
   }
+
+  /**
+   * タスクを承認する
+   */
+  static Future<String> approvalNode(int taskId, int nodeId) {
+    return Ajax.put('${Constants.HOST_API}/api/task/tasks/${taskId}/nodes/${nodeId}/approval/', {});
+  }
+
+  /**
+   * タスクを差戻す
+   */
+  static Future<String> undoNode(int taskId, int nodeId, String reason) {
+    return Ajax.put('${Constants.HOST_API}/api/task/tasks/${taskId}/nodes/${nodeId}/undo/', {
+      reason: reason
+    });
+  }
 }

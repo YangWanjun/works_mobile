@@ -4,13 +4,15 @@ class Task {
   final DateTime dateTime;
   final String approver;
   final String status;
+  final int? nodeId;  // 承認必要なタスク（画面下部に「承認」、「差戻す」のボタンを表示する）
 
   Task({
     required this.id,
     required this.name,
     required this.dateTime,
     required this.approver,
-    required this.status
+    required this.status,
+    this.nodeId,
   });
 
   factory Task.fromJson(Map<String, dynamic> data) {
@@ -19,11 +21,12 @@ class Task {
       approver = data['approver_list'].map((i) => i['user_name']).join(',');
     }
     return Task(
-        id: data['id'],
-        name: data['name'],
-        dateTime: DateTime.parse(data['created_dt']),
-        approver: approver,
-        status: data['status']
+      id: data['id'],
+      name: data['name'],
+      dateTime: DateTime.parse(data['created_dt']),
+      approver: approver,
+      status: data['status'],
+      nodeId: null,
     );
   }
 
@@ -33,11 +36,12 @@ class Task {
 
   factory Task.fromTaskNodeJson(Map<String, dynamic> data) {
     return Task(
-        id: data['task'],
-        name: data['workflow_name'],
-        dateTime: DateTime.parse(data['updated_dt']),
-        approver: data['approver_name'],
-        status: data['status']
+      id: data['task'],
+      name: data['workflow_name'],
+      dateTime: DateTime.parse(data['updated_dt']),
+      approver: data['approver_name'],
+      status: data['status'],
+      nodeId: data['id'],
     );
   }
 
