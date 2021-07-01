@@ -37,4 +37,9 @@ class Workflow {
     // ログイン情報を格納する
     return Workflow.fromJsonList(data['results']);
   }
+
+  static Future<Workflow> getById(String code) {
+    return Ajax.get("${Constants.HOST_API}/api/task/workflows/${code}/")
+      .then((res) => Workflow.fromJson(json.decode(res)));
+  }
 }

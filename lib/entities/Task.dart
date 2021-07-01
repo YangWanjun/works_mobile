@@ -5,6 +5,7 @@ class Task {
   final String approver;
   final String status;
   final int? nodeId;  // 承認必要なタスク（画面下部に「承認」、「差戻す」のボタンを表示する）
+  final String workflow;
 
   Task({
     required this.id,
@@ -12,6 +13,7 @@ class Task {
     required this.dateTime,
     required this.approver,
     required this.status,
+    required this.workflow,
     this.nodeId,
   });
 
@@ -26,6 +28,7 @@ class Task {
       dateTime: DateTime.parse(data['created_dt']),
       approver: approver,
       status: data['status'],
+      workflow: data['workflow'],
       nodeId: null,
     );
   }
@@ -41,6 +44,7 @@ class Task {
       dateTime: DateTime.parse(data['updated_dt']),
       approver: data['approver_name'],
       status: data['status'],
+      workflow: data['workflow'],
       nodeId: data['id'],
     );
   }

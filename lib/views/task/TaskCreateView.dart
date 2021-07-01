@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:works_mobile/api/account.dart';
 import 'package:works_mobile/api/task.dart';
+import 'package:works_mobile/entities/Task.dart';
+import 'package:works_mobile/entities/TaskField.dart';
 import 'package:works_mobile/entities/UserProfile.dart';
 import 'package:works_mobile/entities/Workflow.dart';
 import 'package:works_mobile/utils/common.dart' as common;
@@ -13,11 +15,14 @@ import 'package:works_mobile/widgets/TaskTraffic.dart';
 import 'package:works_mobile/widgets/TaskVisa.dart';
 
 class TaskCreateView extends StatefulWidget {
-  const TaskCreateView({Key? key, required this.workflow})
+  const TaskCreateView({Key? key, required this.workflow, this.task, this.taskFields, this.callback})
         : super(key: key);
   static const routeName = '/task/create';
 
   final Workflow workflow;
+  final Task? task;
+  final List<TaskField>? taskFields;
+  final VoidCallback? callback;
 
   @override
   State<TaskCreateView> createState() => _TaskCreateState();
@@ -30,10 +35,16 @@ class _TaskCreateState extends State<TaskCreateView> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    this.data = this.getInitialData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('作成：${this.widget.workflow.name}'),
+        title: Text('${widget.task == null ? '作成' : '変更'}：${this.widget.workflow.name}'),
       ),
       body: Center(
         child: FutureBuilder(
@@ -74,6 +85,16 @@ class _TaskCreateState extends State<TaskCreateView> {
         ),
       ),
     );
+  }
+
+  Map<String, dynamic> getInitialData() {
+    Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.widget.taskFields != null) {
+      this.widget.taskFields!.forEach((field) {
+        data[field.name] = field.value;
+      });
+    }
+    return data;
   }
 
   Widget _createWorkflowForm(int employee) {
@@ -131,13 +152,22 @@ class _TaskCreateState extends State<TaskCreateView> {
     params['workflow'] = code;
     params['status'] = '10';
     params['fields'] = data;
-    TaskApi.createTask(params).then((value) {
+    Future<String> request;
+    if (this.widget.task != null) {
+      request = TaskApi.changeTask(this.widget.task!.id, params);
+    } else {
+      request = TaskApi.createTask(params);
+    }
+    request.then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
         common.successSnackBar(
           content: 'タスク：${this.widget.workflow.name}は申請しました。',
         ),
       );
       Navigator.pop(context);
+      if (this.widget.callback != null) {
+        this.widget.callback!();
+      }
     }).catchError((err) {
       Map<String, dynamic> error = json.decode(err);
       ScaffoldMessenger.of(context).showSnackBar(

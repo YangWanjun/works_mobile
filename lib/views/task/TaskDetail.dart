@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:works_mobile/api/task.dart';
 import 'package:works_mobile/entities/Task.dart';
 import 'package:works_mobile/entities/TaskField.dart';
+import 'package:works_mobile/entities/Workflow.dart';
 import 'package:works_mobile/utils/NavigationService.dart';
 import 'package:works_mobile/utils/common.dart' as common;
 import 'package:works_mobile/utils/constants.dart' as Constants;
 import 'package:works_mobile/utils/locator.dart';
+
+import 'TaskCreateView.dart';
 
 class TaskDetail extends StatefulWidget {
   const TaskDetail({Key? key, required this.task})
@@ -23,10 +26,16 @@ class TaskDetail extends StatefulWidget {
 class _TaskDetailState extends State<TaskDetail> {
   bool _isLoading = false;
   String? _undoReason;
+  Future<String>? taskInfoFuture;
+  List<TaskField>? _taskFields;
 
   @override
   void initState() {
     super.initState();
+    if (widget.task.status == '02') {
+      // 差戻した場合
+      taskInfoFuture = TaskApi.getTaskUndoInfo(widget.task.id);
+    }
   }
 
   @override
@@ -47,23 +56,24 @@ class _TaskDetailState extends State<TaskDetail> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<TaskField> fields = snapshot.data as List<TaskField>;
+                    _taskFields = fields;
                     return Table(
-                        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: IntrinsicColumnWidth(),
-                          1: FlexColumnWidth(),
-                        },
-                        children: fields.map((e) => TableRow(
-                          children: <Widget>[
-                            TableCell(
-                                child: Container(
-                                  padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
-                                  child: Text(e.label),
-                                )
-                            ),
-                            TableCell(child: Text(e.getDisplayText())),
-                          ],
-                        )).toList()
+                      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: IntrinsicColumnWidth(),
+                        1: FlexColumnWidth(),
+                      },
+                      children: fields.map((e) => TableRow(
+                        children: <Widget>[
+                          TableCell(
+                              child: Container(
+                                padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                                child: Text(e.label),
+                              )
+                          ),
+                          TableCell(child: Text(e.getDisplayText())),
+                        ],
+                      )).toList()
                     );
                   } else if (snapshot.hasError) {
                     return Text("An error occurred");
@@ -73,6 +83,47 @@ class _TaskDetailState extends State<TaskDetail> {
                 },
               ),
               SizedBox(height: 64,),
+              FutureBuilder(
+                future: taskInfoFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    Map<String, dynamic> taskInfo = json.decode(snapshot.data.toString());
+                    return Table(
+                      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: IntrinsicColumnWidth(),
+                        1: FlexColumnWidth(),
+                      },
+                      children: <TableRow>[
+                        TableRow(
+                          children: <TableCell>[
+                            TableCell(
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                                  child: Text('承認者'),
+                                )
+                            ),
+                            TableCell(child: Text(taskInfo['approver'])),
+                          ]
+                        ),
+                        TableRow(
+                          children: <TableCell>[
+                            TableCell(
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                                  child: Text('差戻し理由'),
+                                )
+                            ),
+                            TableCell(child: Text(taskInfo['reason'] == null ? '' : taskInfo['reason'])),
+                          ],
+                        )
+                      ],
+                    );
+                  } else {
+                    return SizedBox(height: 0,);
+                  }
+                },
+              ),
               getActions(),
             ],
           ),
@@ -176,6 +227,34 @@ class _TaskDetailState extends State<TaskDetail> {
               backgroundColor: MaterialStateProperty.all(
                 Colors.indigo,
               ),
+            ),
+          ),
+        ],
+      );
+    } else if (widget.task.status == '02') {
+      // 差戻した場合
+      return Column(
+        children: <Widget>[
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Workflow.getById(widget.task.workflow).then((workflow) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TaskCreateView(
+                      workflow: workflow,
+                      task: this.widget.task,
+                      taskFields: this._taskFields,
+                      callback: () {
+                        final NavigationService _navigationService = locator<NavigationService>();
+                        _navigationService.pushNamed('/home');
+                      },
+                    )
+                  )
+                );
+              }),
+              child: Text("変更")
             ),
           ),
         ],

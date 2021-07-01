@@ -63,12 +63,12 @@ class _WorkflowListState extends State<WorkflowListView> {
                                   icon: Icon(Icons.add_circle_outline),
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => TaskCreateView(
-                                              workflow: data[index],
-                                            )
-                                        )
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TaskCreateView(
+                                            workflow: data[index],
+                                          )
+                                      )
                                     );
                                   },
                                 )

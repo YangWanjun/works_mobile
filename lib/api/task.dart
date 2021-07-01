@@ -11,6 +11,10 @@ class TaskApi {
     return Ajax.post(API_CREATE_TASK, data);
   }
 
+  static Future<String> changeTask(int taskId, Map<String, dynamic> data) {
+    return Ajax.put('${Constants.HOST_API}/api/task/tasks/${taskId}/', data);
+  }
+
   static Future<List<TaskField>> getTaskForm(int taskId) {
     return Ajax.get('${Constants.HOST_API}/api/task/tasks/${taskId}/form/')
         .then((data) => TaskField.fromJsonList(json.decode(data)));
@@ -30,5 +34,9 @@ class TaskApi {
     return Ajax.put('${Constants.HOST_API}/api/task/tasks/${taskId}/nodes/${nodeId}/undo/', {
       reason: reason
     });
+  }
+
+  static Future<String> getTaskUndoInfo(int taskId) {
+    return Ajax.get('${Constants.HOST_API}/api/task/tasks/${taskId}/undo-info/');
   }
 }
