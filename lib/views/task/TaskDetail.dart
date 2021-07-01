@@ -257,6 +257,46 @@ class _TaskDetailState extends State<TaskDetail> {
               child: Text("変更")
             ),
           ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => common.displayConfirm(
+                context: context,
+                content: "削除します、よろしいですか？",
+                callback: () {
+                  setState(() {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    TaskApi.deleteTask(this.widget.task.id).then((value) {
+                      final NavigationService _navigationService = locator<NavigationService>();
+                      _navigationService.pushNamed('/home');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          common.successSnackBar(content: Constants.SUCCESS_DELETED)
+                      );
+                    }).catchError((err) {
+                      Map<String, dynamic> error = json.decode(err);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        common.errorSnackBar(
+                          content: error['detail'],
+                        ),
+                      );
+                    }).whenComplete(() {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    });
+                  });
+                }
+              ),
+              child: Text("削除"),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Colors.redAccent,
+                ),
+              ),
+            ),
+          )
         ],
       );
     } else {

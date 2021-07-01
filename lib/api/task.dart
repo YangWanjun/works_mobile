@@ -15,6 +15,10 @@ class TaskApi {
     return Ajax.put('${Constants.HOST_API}/api/task/tasks/${taskId}/', data);
   }
 
+  static Future<void> deleteTask(int taskId) {
+    return Ajax.delete('${Constants.HOST_API}/api/task/tasks/${taskId}/');
+  }
+
   static Future<List<TaskField>> getTaskForm(int taskId) {
     return Ajax.get('${Constants.HOST_API}/api/task/tasks/${taskId}/form/')
         .then((data) => TaskField.fromJsonList(json.decode(data)));

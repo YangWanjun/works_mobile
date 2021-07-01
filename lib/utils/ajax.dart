@@ -25,6 +25,10 @@ class Ajax {
     return _request('put', url, body);
   }
 
+  static Future<String> delete(String url) {
+    return _request('delete', url, {});
+  }
+
   static Future<String> _request(String method, String url, Map<String, dynamic> body) {
     return getJwt().then((jwt) {
       var headers = {
@@ -37,6 +41,8 @@ class Ajax {
         return http.post(Uri.parse(url), headers: headers, body: json.encode(body));
       } else if (method == 'put') {
         return http.put(Uri.parse(url), headers: headers, body: json.encode(body));
+      } else if (method == 'delete') {
+        return http.delete(Uri.parse(url), headers: headers);
       } else {
         return new Future.error({"error": true});
       }
