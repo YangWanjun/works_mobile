@@ -36,13 +36,13 @@ class _TaskCardState extends State<TaskCard> {
             children: <Widget>[
               ListTile(
                 title: Text(widget.task.name),
-                trailing: Text(formatter.format(widget.task.dateTime.toLocal())),
+                trailing: Text(widget.task.createdDt == null ? "" : formatter.format(widget.task.createdDt.toLocal())),
               ),
               Container(
                 padding: EdgeInsets.only(left: 16, right: 16),
                 child: Row(
                   children: <Widget>[
-                    Text("承認者:${widget.task.approver}")
+                    widget.task.status == '90' ? Text("完了日時:${formatter.format(widget.task.updatedDt.toLocal())}") : Text("承認者:${widget.task.approver}")
                   ],
                 ),
               ),
